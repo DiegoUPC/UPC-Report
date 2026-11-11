@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UPC Monthly Report</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #ffffff;
+      color: #0f172a;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.875rem;
+      box-shadow: 0 6px 18px -4px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+    }
+    .filter-btn {
+      transition: all 0.2s ease;
+    }
+    .filter-btn.active {
+      background-color: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .filter-btn-sec2 {
+      transition: all 0.2s ease;
+    }
+    .filter-btn-sec2.active {
+      background-color: #4f46e5;
+      color: #ffffff;
+      border-color: #6366f1;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16 bg-white text-slate-900">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2.5">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></span>
+          <span class="text-xs font-semibold uppercase tracking-widest text-blue-600">Parts Operation</span>
+        </div>
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight mt-0.5">UPC Monthly Report — October 2026</h1>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 text-xs">
+        <a href="#section-receipts" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-semibold transition">1. Material Receipts (Ingresos)</a>
+        <a href="#section-abnormal" class="px-3.5 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-semibold transition">2. Abnormal &amp; CD Bill</a>
+        <a href="#section-pending" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-semibold transition">3. Pending &amp; IW GR</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 pt-8 space-y-12">
+
+    <!-- =====================================================================
+         SECTION 1: Spare Parts Receipts (MX, NPC, DTV)
+         Palette from uploaded HTML adapted to White Background
+    ====================================================================== -->
+    <section id="section-receipts" class="space-y-6">
+      <div class="border-b border-slate-200 pb-4">
+        <span class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Section 01</span>
+        <h2 class="text-xl font-bold text-slate-900">Spare Parts Receipts &amp; YoY Comparison</h2>
+        <p class="text-sm text-slate-500">Breakdown by Family (MX, NPC, DTV) and YoY Comparison 25.10 and 26.10.</p>
+      </div>
+
+      <!-- Summary KPI Cards for Section 1 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card p-4">
+          <p class="text-xs text-slate-500 font-semibold uppercase">Total Receipts (26.10)</p>
+          <p class="text-2xl font-bold text-slate-900 mt-1">1,574</p>
+          <p class="text-xs text-slate-500 mt-1">25.10 Total: 2,119 (-25.72%)</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-slate-500 font-semibold uppercase">MX Receipts (26.10)</p>
+          <p class="text-2xl font-bold text-blue-600 mt-1">1,421</p>
+          <p class="text-xs text-amber-600 font-medium mt-1">25.10: 2,030 (-30.00%)</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-slate-500 font-semibold uppercase">NPC Receipts (26.10)</p>
+          <p class="text-2xl font-bold text-purple-600 mt-1">23</p>
+          <p class="text-xs text-amber-600 font-medium mt-1">25.10: 28 (-17.86%)</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-slate-500 font-semibold uppercase">DTV Receipts (26.10)</p>
+          <p class="text-2xl font-bold text-emerald-600 mt-1">130</p>
+          <p class="text-xs text-emerald-600 font-medium mt-1">25.10: 61 (+113.11%)</p>
+        </div>
+      </div>
+
+      <!-- 3 Category Breakdown Charts (Same Executive Bar Chart Style) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- MX Chart -->
+        <div class="card p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="text-sm font-semibold text-slate-900">MX Breakdown</h3>
+              <span class="text-xs font-bold text-blue-600">Total: 1,421</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Battery (45.4%) &amp; OCTA (33.4%) lead MX volume</p>
+            <div class="h-60">
+              <canvas id="chartMxReceipts"></canvas>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2 text-[11px] text-slate-600">
+            <div>BATTERY: <strong class="text-slate-900">645</strong></div>
+            <div>OCTA: <strong class="text-slate-900">474</strong></div>
+            <div>OTROS MX: <strong class="text-slate-900">143</strong></div>
+            <div>MOBILE PBA: <strong class="text-slate-900">90</strong></div>
+            <div>CAMARA: <strong class="text-slate-900">59</strong></div>
+            <div>Manos libres: <strong class="text-slate-900">10</strong></div>
+          </div>
+        </div>
+
+        <!-- NPC Chart -->
+        <div class="card p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="text-sm font-semibold text-slate-900">NPC Breakdown</h3>
+              <span class="text-xs font-bold text-purple-600">Total: 23</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Distribution across 5 NPC component groups</p>
+            <div class="h-60">
+              <canvas id="chartNpcReceipts"></canvas>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2 text-[11px] text-slate-600">
+            <div>NPC LCD: <strong class="text-slate-900">6</strong></div>
+            <div>NPC BATTERY: <strong class="text-slate-900">6</strong></div>
+            <div>NPC BOARD: <strong class="text-slate-900">5</strong></div>
+            <div>NPC OTHER: <strong class="text-slate-900">5</strong></div>
+            <div>OTROS NPC: <strong class="text-slate-900">1</strong></div>
+          </div>
+        </div>
+
+        <!-- DTV Chart -->
+        <div class="card p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="text-sm font-semibold text-slate-900">DTV Breakdown</h3>
+              <span class="text-xs font-bold text-emerald-600">Total: 130</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">OPEN CELL represents 76.15% of DTV volume</p>
+            <div class="h-60">
+              <canvas id="chartTvReceipts"></canvas>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2 text-[11px] text-slate-600">
+            <div>OPEN CELL: <strong class="text-slate-900">99</strong></div>
+            <div>PANEL: <strong class="text-slate-900">28</strong></div>
+            <div>Control Remoto: <strong class="text-slate-900">3</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Separated Period Comparison Charts (25.10 vs 26.10) -->
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">YOY comparison: 25.10 vs. 26.10</h3>
+            <p class="text-xs text-slate-500">Individual executive comparison by product family (<code class="text-emerald-600 font-semibold">MX</code>, <code class="text-emerald-600 font-semibold">NPC</code>, and <code class="text-emerald-600 font-semibold">DTV</code>)</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Period Comparison: MX -->
+          <div class="card p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-sm font-semibold text-slate-900">MX: 25.10 vs. 26.10</h4>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">-30.00% (-609)</span>
+              </div>
+              <p class="text-xs text-slate-500 mb-4">25.10: 2,030 units • 26.10: 1,421 units</p>
+              <div class="h-56">
+                <canvas id="chartPeriodMx"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Period Comparison: NPC -->
+          <div class="card p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-sm font-semibold text-slate-900">NPC: 25.10 vs. 26.10</h4>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">-17.86% (-5)</span>
+              </div>
+              <p class="text-xs text-slate-500 mb-4">25.10: 28 units • 26.10: 23 units</p>
+              <div class="h-56">
+                <canvas id="chartPeriodNpc"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Period Comparison: DTV -->
+          <div class="card p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-sm font-semibold text-slate-900">DTV: 25.10 vs. 26.10</h4>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">+113.11% (+69)</span>
+              </div>
+              <p class="text-xs text-slate-500 mb-4">25.10: 61 units • 26.10: 130 units</p>
+              <div class="h-56">
+                <canvas id="chartPeriodDtv"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Consolidated Period Comparison Table -->
+        <div class="card p-5 overflow-x-auto">
+          <table class="w-full text-left text-xs border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200">
+              <tr>
+                <th class="py-2.5 px-3 font-semibold">Category Group</th>
+                <th class="py-2.5 px-3 font-semibold text-right">25.10</th>
+                <th class="py-2.5 px-3 font-semibold text-right">26.10</th>
+                <th class="py-2.5 px-3 font-semibold text-right">Delta (Units &amp; %)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr class="hover:bg-slate-50/70">
+                <td class="py-2.5 px-3 font-medium text-slate-900">MX</td>
+                <td class="py-2.5 px-3 text-right">2,030</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-slate-900">1,421</td>
+                <td class="py-2.5 px-3 text-right text-amber-600 font-semibold">-609 (-30.00%)</td>
+              </tr>
+              <tr class="hover:bg-slate-50/70">
+                <td class="py-2.5 px-3 font-medium text-slate-900">NPC</td>
+                <td class="py-2.5 px-3 text-right">28</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-slate-900">23</td>
+                <td class="py-2.5 px-3 text-right text-amber-600 font-semibold">-5 (-17.86%)</td>
+              </tr>
+              <tr class="hover:bg-slate-50/70">
+                <td class="py-2.5 px-3 font-medium text-slate-900">DTV</td>
+                <td class="py-2.5 px-3 text-right">61</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-slate-900">130</td>
+                <td class="py-2.5 px-3 text-right text-emerald-600 font-semibold">+69 (+113.11%)</td>
+              </tr>
+            </tbody>
+            <tfoot class="bg-slate-50 font-semibold text-slate-900 border-t border-slate-200">
+              <tr>
+                <td class="py-2.5 px-3">Combined Total</td>
+                <td class="py-2.5 px-3 text-right">2,119</td>
+                <td class="py-2.5 px-3 text-right">1,574</td>
+                <td class="py-2.5 px-3 text-right text-amber-600">-545 (-25.72%)</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECTION 2: ABNORMAL & CD BILL STATUS (CLP / USD FILTER)
+    ====================================================================== -->
+    <section id="section-abnormal" class="space-y-6">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-indigo-100 pb-4">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-indigo-600">Section 02</span>
+          <h2 class="text-xl font-bold text-slate-900">Abnormal Cases &amp; CD Bill Financial Value</h2>
+          <p class="text-sm text-slate-500">
+           Abnormal cases by CD Bill status, defect type, part number, and value.
+          </p>
+        </div>
+
+        <!-- Dedicated Small Exchange Rate Box + Currency Filter -->
+        <div class="flex flex-wrap items-center gap-3 self-start lg:self-auto">
+          <div class="px-3.5 py-2 rounded-xl bg-teal-50/80 border border-teal-200 shadow-sm flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-teal-600"></span>
+            <div class="leading-tight">
+              <p class="text-[10px] font-semibold uppercase tracking-wider text-teal-800">USD Exchange Rate (30/10)</p>
+              <p class="text-xs font-bold text-slate-900">1 USD = 993.22 CLP</p>
+            </div>
+          </div>
+
+          <div class="inline-flex items-center bg-indigo-50/70 p-1 rounded-xl border border-indigo-200">
+            <button onclick="setAbnormalCurrency('CLP')" id="btn-curr-CLP" class="filter-btn-sec2 active px-4 py-1.5 rounded-lg text-xs font-semibold text-indigo-900">
+              CLP ($ Chilean Peso)
+            </button>
+            <button onclick="setAbnormalCurrency('USD')" id="btn-curr-USD" class="filter-btn-sec2 px-4 py-1.5 rounded-lg text-xs font-semibold text-indigo-900">
+              USD ($ US Dollar)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Cards for Section 2 (Distinct Indigo / Cyan / Violet Financial Palette) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card p-4 border-indigo-200 bg-gradient-to-b from-indigo-50/50 to-white">
+          <p class="text-xs text-indigo-900 font-semibold uppercase">Total Abnormal Amount</p>
+          <p id="kpi-abn-total" class="text-2xl font-bold text-indigo-700 mt-1">$495,242 CLP</p>
+          <p id="kpi-abn-total-sub" class="text-xs text-slate-500 mt-1">Equivalent: $498.62 USD</p>
+        </div>
+        <div class="card p-4 border-cyan-200">
+          <p class="text-xs text-slate-500 font-semibold uppercase">Status 10</p>
+          <p id="kpi-abn-s10" class="text-2xl font-bold text-cyan-600 mt-1">$161,995 CLP</p>
+          <p class="text-xs text-slate-500 mt-1">1 Case [IW]MISMATCH</p>
+        </div>
+        <div class="card p-4 border-violet-200">
+          <p class="text-xs text-slate-500 font-semibold uppercase">Status 95</p>
+          <p id="kpi-abn-s95" class="text-2xl font-bold text-violet-700 mt-1">$333,247 CLP</p>
+          <p class="text-xs text-slate-500 mt-1">1 Case [IW]BROKEN</p>
+        </div>
+        <div class="card p-4 border-teal-200">
+          <p class="text-xs text-slate-500 font-semibold uppercase">Total October Cases</p>
+          <p class="text-2xl font-bold text-teal-600 mt-1">2 Cases</p>
+          <p class="text-xs text-slate-500 mt-1">1 Status 10 • 1 Status 95</p>
+        </div>
+      </div>
+
+      <!-- Charts & Details Row for Abnormal -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Valuation by Family & CD Bill Status Chart -->
+        <div class="card p-5 lg:col-span-6 border-indigo-100">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="text-sm font-semibold text-slate-900">Abnormal Financial Valuation by Family &amp; Status</h3>
+            <span id="badge-currency" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">Currency: CLP</span>
+          </div>
+          <p class="text-xs text-slate-500 mb-4">Comparison between Status 10 and Status 95</p>
+          <div class="h-64">
+            <canvas id="chartAbnormalPrice"></canvas>
+          </div>
+        </div>
+
+        <!-- Tables & Official Remarks -->
+        <div class="card p-5 lg:col-span-6 border-indigo-100 flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="text-sm font-semibold text-slate-900 mb-1">Abnormal Case Breakdown &amp; Part Reference</h3>
+            <p class="text-xs text-slate-500 mb-3">Defect classification Abnormal</p>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border border-indigo-100 rounded-lg overflow-hidden">
+                <thead class="bg-indigo-50/80 text-indigo-950 border-b border-indigo-200">
+                  <tr>
+                    <th class="py-2.5 px-3 font-semibold">Family</th>
+                    <th class="py-2.5 px-3 font-semibold">Part Number</th>
+                    <th class="py-2.5 px-3 font-semibold">CD Bill Status</th>
+                    <th class="py-2.5 px-3 font-semibold">Defect Classification</th>
+                    <th class="py-2.5 px-3 font-semibold text-right">Qty</th>
+                    <th id="th-abn-amount" class="py-2.5 px-3 font-semibold text-right">Amount (CLP)</th>
+                  </tr>
+                </thead>
+                <tbody id="table-abnormal-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                <tfoot id="table-abnormal-foot" class="bg-indigo-50/60 font-semibold text-slate-900 border-t border-indigo-200"></tfoot>
+              </table>
+            </div>
+          </div>
+
+          <!-- Status Legend / Notes from Sheet -->
+          <div class="bg-indigo-50/40 border border-indigo-100 rounded-xl p-4 space-y-2">
+            <p class="text-xs font-semibold uppercase tracking-wider text-indigo-900">Status Definitions</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-700">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-cyan-500 shrink-0"></span>
+                <span><strong>Status 10:</strong> Case under review.</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 shrink-0"></span>
+                <span><strong>Status 20:</strong> Case charged to the service.</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-violet-600 shrink-0"></span>
+                <span><strong>Status 95:</strong> Case was rejected.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECTION 3: PENDING & GR IN IW (CHILE / BOLIVIA / ALL)
+         Palette from uploaded HTML adapted to White Background
+    ====================================================================== -->
+    <section id="section-pending" class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-blue-600">Section 03</span>
+          <h2 class="text-xl font-bold text-slate-900">Pending &amp; Goods Receipt (GR) in IW</h2>
+          <p class="text-sm text-slate-500">ASC pending return balances (202609 &amp; 202610) and monthly IW Goods Receipt tracking.</p>
+        </div>
+
+        <!-- Country Filter (All / Chile / Bolivia) -->
+        <div class="inline-flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 self-start sm:self-auto">
+          <button onclick="setPendingCountry('ALL')" id="btn-country-ALL" class="filter-btn active px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700">
+            All (Chile + Bolivia)
+          </button>
+          <button onclick="setPendingCountry('Chile')" id="btn-country-Chile" class="filter-btn px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700">
+            Chile
+          </button>
+          <button onclick="setPendingCountry('Bolivia')" id="btn-country-Bolivia" class="filter-btn px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700">
+            Bolivia
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Cards for Section 3 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="card p-4">
+          <p class="text-xs text-slate-500 font-semibold uppercase">ASC Pending Total</p>
+          <p id="kpi-asc-total" class="text-2xl font-bold text-slate-900 mt-1">222</p>
+          <p id="kpi-asc-sub" class="text-xs text-slate-500 mt-1">31 Active ASCs (Chile + Bolivia)</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-slate-500 font-semibold uppercase">Pending 202609</p>
+          <p id="kpi-asc-202609" class="text-2xl font-bold text-amber-500 mt-1">8</p>
+          <p id="kpi-asc-202609-sub" class="text-xs text-slate-500 mt-1">2.08% IW Pending (Sept)</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-slate-500 font-semibold uppercase">Pending 202610</p>
+          <p id="kpi-asc-202610" class="text-2xl font-bold text-blue-600 mt-1">214</p>
+          <p id="kpi-asc-202610-sub" class="text-xs text-slate-500 mt-1">45.44% IW Pending (Oct)</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-slate-500 font-semibold uppercase">Oct IW GR Done</p>
+          <p id="kpi-oct-gr" class="text-2xl font-bold text-emerald-600 mt-1">257</p>
+          <p id="kpi-oct-gr-rate" class="text-xs text-emerald-600 font-medium mt-1">54.56% GR Rate (Oct)</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-slate-500 font-semibold uppercase">Oct IW Pending</p>
+          <p id="kpi-oct-iw-pending" class="text-2xl font-bold text-rose-500 mt-1">214</p>
+          <p id="kpi-oct-iw-total" class="text-xs text-slate-500 mt-1">Out of 471 Total Oct IW</p>
+        </div>
+      </div>
+
+      <!-- Charts Row: Monthly IW Trend + Top 10 ASCs -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Monthly Pending & GR in IW Chart -->
+        <div class="card p-5 lg:col-span-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="text-sm font-semibold text-slate-900">Monthly Pending vs. GR Done in IW</h3>
+              <span id="badge-country-iw" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">All (Chile + Bolivia)</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">August (Closed), September (In Process), October (In Process)</p>
+            <div class="h-64">
+              <canvas id="chartIwMonthly"></canvas>
+            </div>
+          </div>
+
+          <!-- Monthly IW Summary Table -->
+          <div class="mt-4 pt-4 border-t border-slate-100 overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="text-slate-500 border-b border-slate-200">
+                  <th class="pb-2 font-semibold">Month</th>
+                  <th class="pb-2 font-semibold text-right">Pending</th>
+                  <th class="pb-2 font-semibold text-right">GR Done</th>
+                  <th class="pb-2 font-semibold text-right">Total</th>
+                  <th class="pb-2 font-semibold text-right">% GR</th>
+                  <th class="pb-2 font-semibold text-right">% Pend</th>
+                  <th class="pb-2 font-semibold text-right">Remarks</th>
+                </tr>
+              </thead>
+              <tbody id="table-iw-monthly" class="divide-y divide-slate-100 text-slate-700"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ASC Pending Breakdown Chart (Top 10) -->
+        <div class="card p-5 lg:col-span-7 flex flex-col">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="text-sm font-semibold text-slate-900">Pending Units by ASC (202609 vs. 202610) — Top 10</h3>
+            <span id="asc-count-badge" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">Top 10 of 31 ASCs</span>
+          </div>
+          <p class="text-xs text-slate-500 mb-4">Top 10 ASCs with the highest pending units</p>
+          <div class="h-96">
+            <canvas id="chartAscPending"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Complete ASC Table -->
+      <div class="card p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+          <div>
+            <h3 class="text-sm font-semibold text-slate-900">Detailed ASC Pending Register</h3>
+          </div>
+          <input
+            type="text"
+            id="asc-search"
+            oninput="renderAscTable()"
+            placeholder="Search ASC name..."
+            class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white"
+          />
+        </div>
+        <div class="overflow-x-auto max-h-80 custom-scrollbar">
+          <table class="w-full text-left text-xs">
+            <thead class="sticky top-0 bg-slate-50 text-slate-600 border-b border-slate-200">
+              <tr>
+                <th class="py-2.5 px-3 font-semibold">ASC Name</th>
+                <th class="py-2.5 px-3 font-semibold">Country</th>
+                <th class="py-2.5 px-3 font-semibold text-right">202609</th>
+                <th class="py-2.5 px-3 font-semibold text-right">202610</th>
+                <th class="py-2.5 px-3 font-semibold text-right">Total</th>
+                <th class="py-2.5 px-3 font-semibold text-right">% of Selection</th>
+              </tr>
+            </thead>
+            <tbody id="table-asc-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+            <tfoot id="table-asc-foot" class="bg-slate-50 font-semibold text-slate-900 border-t border-slate-200"></tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // 1. EXACT DATA FROM UPLOADED TABLES (UPDATED FROM REPORTE OCTOBER.XLSX)
+    // =========================================================================
+
+    const ascPendingData = [
+      { name: "VICTOR HUGO LEVINERI HERNANDEZ", country: "Chile", m202609: 0, m202610: 2, total: 2 },
+      { name: "TELCOM SOLUTION S.A.", country: "Chile", m202609: 0, m202610: 8, total: 8 },
+      { name: "TELCOM SOLUTION MANQUEHUE", country: "Chile", m202609: 0, m202610: 9, total: 9 },
+      { name: "TELCOM SOLUTION LAS CONDES", country: "Chile", m202609: 0, m202610: 1, total: 1 },
+      { name: "TECNOJUMP PUERTO MONTT", country: "Chile", m202609: 0, m202610: 1, total: 1 },
+      { name: "TEC SOLUTION PTO MONTT", country: "Chile", m202609: 0, m202610: 1, total: 1 },
+      { name: "SOCIEDAD DE TECNICOS INTEGRADOS LTD", country: "Chile", m202609: 0, m202610: 2, total: 2 },
+      { name: "SOCIEDAD DE TECNICOS INTEGR. MAIPU", country: "Chile", m202609: 1, m202610: 0, total: 1 },
+      { name: "SERVITEC BOL TRINIDAD", country: "Bolivia", m202609: 3, m202610: 0, total: 3 },
+      { name: "SERVINORTE SPA", country: "Chile", m202609: 2, m202610: 0, total: 2 },
+      { name: "SERVICIOS TECNOLOGICOS HVAR SPA", country: "Chile", m202609: 0, m202610: 54, total: 54 },
+      { name: "SERVICIOS INTEGRALES EN TECNOLOGIAS", country: "Chile", m202609: 0, m202610: 2, total: 2 },
+      { name: "SERVICIO TECNICO DANIEL CONSTANZO", country: "Chile", m202609: 0, m202610: 1, total: 1 },
+      { name: "RUBEN ALFREDO QUISPE MONTOYA", country: "Bolivia", m202609: 0, m202610: 2, total: 2 },
+      { name: "POLO SERVICES SRL", country: "Bolivia", m202609: 0, m202610: 6, total: 6 },
+      { name: "POLO SERVICE SANTA CRUZ", country: "Bolivia", m202609: 0, m202610: 11, total: 11 },
+      { name: "PATRICIO ENRIQUE ESPINOSA GONZALEZ", country: "Chile", m202609: 0, m202610: 6, total: 6 },
+      { name: "JORGE EUGENIO ASALGADO NUNEZ", country: "Chile", m202609: 0, m202610: 2, total: 2 },
+      { name: "INVERSIONES Y SERVICIOS RTC SpA", country: "Chile", m202609: 1, m202610: 0, total: 1 },
+      { name: "GESTION EN TEC Y SIST POLO SERVICE", country: "Bolivia", m202609: 0, m202610: 35, total: 35 },
+      { name: "GEST TEC y SYST POLO SERVICE SCZ", country: "Bolivia", m202609: 0, m202610: 15, total: 15 },
+      { name: "GEST TEC y SYST POLO SERVICE POTOSI", country: "Bolivia", m202609: 0, m202610: 2, total: 2 },
+      { name: "GEST TEC y SYST POLO SERVICE ORURO", country: "Bolivia", m202609: 0, m202610: 1, total: 1 },
+      { name: "GEST TEC y SYST POLO SERVICE CBBA", country: "Bolivia", m202609: 0, m202610: 4, total: 4 },
+      { name: "CESER S.A.SUCRE", country: "Bolivia", m202609: 0, m202610: 11, total: 11 },
+      { name: "CESER S.A.SANTA CRUZ", country: "Bolivia", m202609: 0, m202610: 1, total: 1 },
+      { name: "CESER S.A.POTOSI", country: "Bolivia", m202609: 1, m202610: 1, total: 2 },
+      { name: "CESER S.A.COCHABAMBA", country: "Bolivia", m202609: 0, m202610: 22, total: 22 },
+      { name: "CESER S.A. LA PAZ_3", country: "Bolivia", m202609: 0, m202610: 6, total: 6 },
+      { name: "CELLSTAR CHILE S.A.", country: "Chile", m202609: 0, m202610: 1, total: 1 },
+      { name: "BRIGHTCELL LOGISTICS CHILE LIMITADA", country: "Chile", m202609: 0, m202610: 7, total: 7 }
+    ];
+
+    const iwMonthlyByCountry = {
+      Chile: [
+        { month: "August", pending: 0, grDone: 202, total: 202, remarks: "Month Closed" },
+        { month: "September", pending: 4, grDone: 208, total: 212, remarks: "Month in Process" },
+        { month: "October", pending: 97, grDone: 213, total: 310, remarks: "Month in Process" }
+      ],
+      Bolivia: [
+        { month: "August", pending: 0, grDone: 205, total: 205, remarks: "Month Closed" },
+        { month: "September", pending: 4, grDone: 168, total: 172, remarks: "Month in Process" },
+        { month: "October", pending: 117, grDone: 44, total: 161, remarks: "Month in Process" }
+      ]
+    };
+
+    const FX_CLP_PER_USD = 993.22;
+
+    const abnormalCases = [
+      {
+        family: "OCTA",
+        partNumber: "GH82-37734A",
+        status: "10 (Under Review)",
+        defect: "[IW]MISMATCH",
+        qty: 1,
+        s10Clp: 161995,
+        s95Clp: 0,
+        totalClp: 161995
+      },
+      {
+        family: "PANEL",
+        partNumber: "BN95-11862H",
+        status: "95 (Rejected)",
+        defect: "[IW]BROKEN",
+        qty: 1,
+        s10Clp: 0,
+        s95Clp: 333247,
+        totalClp: 333247
+      }
+    ];
+
+    // State
+    let selectedCountry = "ALL";
+    let selectedCurrency = "CLP";
+
+    // Chart instances
+    let chartIwMonthlyInstance = null;
+    let chartAscPendingInstance = null;
+    let chartAbnormalPriceInstance = null;
+
+    // Common Chart.js defaults for White Background
+    Chart.defaults.color = "#475569";
+    Chart.defaults.font.family = "'Inter', sans-serif";
+
+    // =========================================================================
+    // 2. SECTION 1 LOGIC: INGRESOS CHARTS (EXACT PALETTE FROM UPLOADED HTML)
+    // =========================================================================
+
+    function initReceiptsCharts() {
+      const commonBarOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 10 }, color: "#475569" } },
+          y: { beginAtZero: true, grid: { color: "#e2e8f0" }, ticks: { color: "#64748b" } }
+        }
+      };
+
+      // 1. MX Breakdown Bar Chart
+      new Chart(document.getElementById("chartMxReceipts").getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: ["BATTERY", "OCTA", "OTROS MX", "MOBILE PBA", "CAMARA", "Manos libres"],
+          datasets: [{
+            label: "MX October Receipts",
+            data: [645, 474, 143, 90, 59, 10],
+            backgroundColor: ["#2563eb", "#3b82f6", "#60a5fa", "#38bdf8", "#818cf8", "#94a3b8"],
+            borderRadius: 6
+          }]
+        },
+        options: commonBarOptions
+      });
+
+      // 2. NPC Breakdown Bar Chart
+      new Chart(document.getElementById("chartNpcReceipts").getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: ["NPC LCD", "NPC BATTERY", "NPC BOARD", "NPC OTHER", "OTROS NPC"],
+          datasets: [{
+            label: "NPC October Receipts",
+            data: [6, 6, 5, 5, 1],
+            backgroundColor: ["#7c3aed", "#8b5cf6", "#a855f7", "#c084fc", "#64748b"],
+            borderRadius: 6
+          }]
+        },
+        options: commonBarOptions
+      });
+
+      // 3. DTV Breakdown Bar Chart
+      new Chart(document.getElementById("chartTvReceipts").getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: ["OPEN CELL", "PANEL", "Control Remoto"],
+          datasets: [{
+            label: "DTV October Receipts",
+            data: [99, 28, 3],
+            backgroundColor: ["#059669", "#10b981", "#34d399"],
+            borderRadius: 6
+          }]
+        },
+        options: commonBarOptions
+      });
+
+      // 4. Separated Period Comparison Chart — MX (25.10 vs 26.10)
+      new Chart(document.getElementById("chartPeriodMx").getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: ["Period 25.10", "Period 26.10"],
+          datasets: [{
+            label: "MX Receipts",
+            data: [2030, 1421],
+            backgroundColor: ["#64748b", "#3b82f6"],
+            borderRadius: 6,
+            barPercentage: 0.55
+          }]
+        },
+        options: commonBarOptions
+      });
+
+      // 5. Separated Period Comparison Chart — NPC (25.10 vs 26.10)
+      new Chart(document.getElementById("chartPeriodNpc").getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: ["Period 25.10", "Period 26.10"],
+          datasets: [{
+            label: "NPC Receipts",
+            data: [28, 23],
+            backgroundColor: ["#64748b", "#8b5cf6"],
+            borderRadius: 6,
+            barPercentage: 0.55
+          }]
+        },
+        options: commonBarOptions
+      });
+
+      // 6. Separated Period Comparison Chart — DTV (25.10 vs 26.10)
+      new Chart(document.getElementById("chartPeriodDtv").getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: ["Period 25.10", "Period 26.10"],
+          datasets: [{
+            label: "DTV Receipts",
+            data: [61, 130],
+            backgroundColor: ["#64748b", "#10b981"],
+            borderRadius: 6,
+            barPercentage: 0.55
+          }]
+        },
+        options: commonBarOptions
+      });
+    }
+
+    // =========================================================================
+    // 3. SECTION 2 LOGIC: ABNORMAL & CURRENCY CONVERSION
+    // =========================================================================
+
+    function formatCurrency(clpAmount, currency) {
+      if (currency === "CLP") {
+        return "$" + Math.round(clpAmount).toLocaleString("en-US") + " CLP";
+      } else {
+        const usd = clpAmount / FX_CLP_PER_USD;
+        return "$" + usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " USD";
+      }
+    }
+
+    function convertValue(clpAmount, currency) {
+      return currency === "CLP" ? clpAmount : Number((clpAmount / FX_CLP_PER_USD).toFixed(2));
+    }
+
+    function setAbnormalCurrency(currency) {
+      selectedCurrency = currency;
+
+      ["CLP", "USD"].forEach(curr => {
+        const btn = document.getElementById(`btn-curr-${curr}`);
+        if (curr === currency) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+
+      updateAbnormalSection();
+    }
+
+    function updateAbnormalSection() {
+      const totalClp = 495242;
+      const s10Clp = 161995;
+      const s95Clp = 333247;
+
+      const altCurrency = selectedCurrency === "CLP" ? "USD" : "CLP";
+
+      document.getElementById("kpi-abn-total").textContent = formatCurrency(totalClp, selectedCurrency);
+      document.getElementById("kpi-abn-total-sub").textContent = `Equivalent: ${formatCurrency(totalClp, altCurrency)}`;
+      document.getElementById("kpi-abn-s10").textContent = formatCurrency(s10Clp, selectedCurrency);
+      document.getElementById("kpi-abn-s95").textContent = formatCurrency(s95Clp, selectedCurrency);
+
+      document.getElementById("badge-currency").textContent = `Currency: ${selectedCurrency}`;
+      document.getElementById("th-abn-amount").textContent = `Amount (${selectedCurrency})`;
+
+      // Render Abnormal Table (Indigo / Cyan / Violet Palette)
+      const tbody = document.getElementById("table-abnormal-body");
+      tbody.innerHTML = abnormalCases.map(c => `
+        <tr class="hover:bg-indigo-50/30">
+          <td class="py-2.5 px-3 font-semibold text-slate-900">${c.family}</td>
+          <td class="py-2.5 px-3 font-mono text-indigo-600 font-semibold">${c.partNumber}</td>
+          <td class="py-2.5 px-3">${c.status}</td>
+          <td class="py-2.5 px-3">
+            <span class="px-2 py-0.5 rounded bg-cyan-50 text-cyan-800 border border-cyan-200 font-mono text-[11px]">${c.defect}</span>
+          </td>
+          <td class="py-2.5 px-3 text-right">${c.qty}</td>
+          <td class="py-2.5 px-3 text-right font-semibold text-slate-900">${formatCurrency(c.totalClp, selectedCurrency)}</td>
+        </tr>
+      `).join("");
+
+      const tfoot = document.getElementById("table-abnormal-foot");
+      tfoot.innerHTML = `
+        <tr>
+          <td class="py-2.5 px-3" colspan="4">Total October Abnormal</td>
+          <td class="py-2.5 px-3 text-right">2</td>
+          <td class="py-2.5 px-3 text-right text-indigo-700">${formatCurrency(totalClp, selectedCurrency)}</td>
+        </tr>
+      `;
+
+      // Render Abnormal Valuation Chart (Cyan for Status 10 & Violet/Indigo for Status 95)
+      if (chartAbnormalPriceInstance) chartAbnormalPriceInstance.destroy();
+      const ctxAbn = document.getElementById("chartAbnormalPrice").getContext("2d");
+      chartAbnormalPriceInstance = new Chart(ctxAbn, {
+        type: "bar",
+        data: {
+          labels: ["OCTA (GH82-37734A)", "PANEL (BN95-11862H)", "Total Valuation"],
+          datasets: [
+            {
+              label: `Status 10 - Under Review (${selectedCurrency})`,
+              data: [
+                convertValue(161995, selectedCurrency),
+                convertValue(0, selectedCurrency),
+                convertValue(161995, selectedCurrency)
+              ],
+              backgroundColor: "#0891b2",
+              borderRadius: 6
+            },
+            {
+              label: `Status 95 - Rejected (${selectedCurrency})`,
+              data: [
+                convertValue(0, selectedCurrency),
+                convertValue(333247, selectedCurrency),
+                convertValue(333247, selectedCurrency)
+              ],
+              backgroundColor: "#6d28d9",
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { boxWidth: 12, color: "#334155" } },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${
+                  selectedCurrency === "CLP"
+                    ? "$" + Math.round(ctx.raw).toLocaleString("en-US") + " CLP"
+                    : "$" + Number(ctx.raw).toFixed(2) + " USD"
+                }`
+              }
+            }
+          },
+          scales: {
+            x: { stacked: true, grid: { display: false }, ticks: { color: "#475569" } },
+            y: {
+              stacked: true,
+              grid: { color: "#e2e8f0" },
+              ticks: {
+                color: "#64748b",
+                callback: (val) => selectedCurrency === "CLP"
+                  ? "$" + val.toLocaleString("en-US")
+                  : "$" + val.toFixed(0)
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // =========================================================================
+    // 4. SECTION 3 LOGIC: PENDING & IW GR (PALETTE FROM UPLOADED HTML)
+    // =========================================================================
+
+    function getIwMonthlyData(country) {
+      if (country === "Chile") return iwMonthlyByCountry.Chile;
+      if (country === "Bolivia") return iwMonthlyByCountry.Bolivia;
+      // ALL = sum of Chile + Bolivia per month
+      return iwMonthlyByCountry.Chile.map((cRow, idx) => {
+        const bRow = iwMonthlyByCountry.Bolivia[idx];
+        return {
+          month: cRow.month,
+          pending: cRow.pending + bRow.pending,
+          grDone: cRow.grDone + bRow.grDone,
+          total: cRow.total + bRow.total,
+          remarks: cRow.remarks
+        };
+      });
+    }
+
+    function setPendingCountry(country) {
+      selectedCountry = country;
+
+      ["ALL", "Chile", "Bolivia"].forEach(c => {
+        const btn = document.getElementById(`btn-country-${c}`);
+        if (c === country) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+
+      updatePendingSection();
+    }
+
+    function updatePendingSection() {
+      const filteredAsc = selectedCountry === "ALL"
+        ? ascPendingData
+        : ascPendingData.filter(d => d.country === selectedCountry);
+
+      const sum202609 = filteredAsc.reduce((acc, r) => acc + r.m202609, 0);
+      const sum202610 = filteredAsc.reduce((acc, r) => acc + r.m202610, 0);
+      const sumTotal = filteredAsc.reduce((acc, r) => acc + r.total, 0);
+
+      const iwRows = getIwMonthlyData(selectedCountry);
+      const sepRow = iwRows.find(r => r.month === "September");
+      const octRow = iwRows.find(r => r.month === "October");
+
+      const sepPendingPct = sepRow && sepRow.total > 0 ? ((sepRow.pending / sepRow.total) * 100).toFixed(2) : "0.00";
+      const octPendingPct = octRow && octRow.total > 0 ? ((octRow.pending / octRow.total) * 100).toFixed(2) : "0.00";
+      const octGrPct = octRow && octRow.total > 0 ? ((octRow.grDone / octRow.total) * 100).toFixed(2) : "0.00";
+
+      // Update KPI cards
+      document.getElementById("kpi-asc-total").textContent = sumTotal.toLocaleString("en-US");
+      document.getElementById("kpi-asc-sub").textContent = `${filteredAsc.length} Active ASCs (${selectedCountry === "ALL" ? "Chile + Bolivia" : selectedCountry})`;
+      document.getElementById("kpi-asc-202609").textContent = sum202609.toLocaleString("en-US");
+      document.getElementById("kpi-asc-202609-sub").textContent = `${sepPendingPct}% IW Pending (Sept)`;
+      document.getElementById("kpi-asc-202610").textContent = sum202610.toLocaleString("en-US");
+      document.getElementById("kpi-asc-202610-sub").textContent = `${octPendingPct}% IW Pending (Oct)`;
+      document.getElementById("kpi-oct-gr").textContent = octRow.grDone.toLocaleString("en-US");
+      document.getElementById("kpi-oct-gr-rate").textContent = `${octGrPct}% GR Rate (Oct)`;
+      document.getElementById("kpi-oct-iw-pending").textContent = octRow.pending.toLocaleString("en-US");
+      document.getElementById("kpi-oct-iw-total").textContent = `Out of ${octRow.total.toLocaleString("en-US")} Total Oct IW`;
+
+      document.getElementById("badge-country-iw").textContent =
+        selectedCountry === "ALL" ? "All (Chile + Bolivia)" : selectedCountry;
+
+      // Update Monthly IW Table
+      const iwTbody = document.getElementById("table-iw-monthly");
+      iwTbody.innerHTML = iwRows.map(r => {
+        const grRate = ((r.grDone / r.total) * 100).toFixed(2);
+        const pendRate = ((r.pending / r.total) * 100).toFixed(2);
+        return `
+          <tr class="hover:bg-slate-50/70">
+            <td class="py-2 font-medium text-slate-900">${r.month}</td>
+            <td class="py-2 text-right text-rose-500 font-semibold">${r.pending}</td>
+            <td class="py-2 text-right text-emerald-600 font-semibold">${r.grDone}</td>
+            <td class="py-2 text-right font-semibold text-slate-900">${r.total}</td>
+            <td class="py-2 text-right text-emerald-600 font-medium">${grRate}%</td>
+            <td class="py-2 text-right text-amber-600 font-medium">${pendRate}%</td>
+            <td class="py-2 text-right text-slate-500">${r.remarks}</td>
+          </tr>
+        `;
+      }).join("");
+
+      // Update Monthly IW Chart (Emerald #10b981 & Rose #f43f5e from uploaded HTML)
+      if (chartIwMonthlyInstance) chartIwMonthlyInstance.destroy();
+      const ctxIw = document.getElementById("chartIwMonthly").getContext("2d");
+      chartIwMonthlyInstance = new Chart(ctxIw, {
+        type: "bar",
+        data: {
+          labels: iwRows.map(r => r.month),
+          datasets: [
+            {
+              label: "GR Done",
+              data: iwRows.map(r => r.grDone),
+              backgroundColor: "#10b981",
+              borderRadius: 6
+            },
+            {
+              label: "Pending",
+              data: iwRows.map(r => r.pending),
+              backgroundColor: "#f43f5e",
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { boxWidth: 12, color: "#334155" } }
+          },
+          scales: {
+            x: { stacked: true, grid: { display: false }, ticks: { color: "#475569" } },
+            y: { stacked: true, grid: { color: "#e2e8f0" }, ticks: { color: "#64748b" } }
+          }
+        }
+      });
+
+      // Sort ASCs descending by Total and take Top 10 for the chart
+      const sortedAsc = [...filteredAsc].sort((a, b) => b.total - a.total);
+      const top10Asc = sortedAsc.slice(0, 10);
+      document.getElementById("asc-count-badge").textContent = `Top ${top10Asc.length} of ${sortedAsc.length} ASCs`;
+
+      // Amber #f59e0b & Blue #3b82f6 from uploaded HTML
+      if (chartAscPendingInstance) chartAscPendingInstance.destroy();
+      const ctxAsc = document.getElementById("chartAscPending").getContext("2d");
+      chartAscPendingInstance = new Chart(ctxAsc, {
+        type: "bar",
+        data: {
+          labels: top10Asc.map(r => r.name.length > 28 ? r.name.slice(0, 28) + "…" : r.name),
+          datasets: [
+            {
+              label: "202609",
+              data: top10Asc.map(r => r.m202609),
+              backgroundColor: "#f59e0b",
+              borderRadius: 4
+            },
+            {
+              label: "202610",
+              data: top10Asc.map(r => r.m202610),
+              backgroundColor: "#3b82f6",
+              borderRadius: 4
+            }
+          ]
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { boxWidth: 12, color: "#334155" } },
+            tooltip: {
+              callbacks: {
+                title: (items) => top10Asc[items[0].dataIndex].name
+              }
+            }
+          },
+          scales: {
+            x: { stacked: true, grid: { color: "#e2e8f0" }, ticks: { color: "#64748b" } },
+            y: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 }, color: "#1e293b" } }
+          }
+        }
+      });
+
+      renderAscTable();
+    }
+
+    function renderAscTable() {
+      const query = (document.getElementById("asc-search").value || "").toLowerCase();
+      const baseList = selectedCountry === "ALL"
+        ? ascPendingData
+        : ascPendingData.filter(d => d.country === selectedCountry);
+
+      const filtered = baseList
+        .filter(d => d.name.toLowerCase().includes(query))
+        .sort((a, b) => b.total - a.total);
+
+      const sum202609 = filtered.reduce((acc, r) => acc + r.m202609, 0);
+      const sum202610 = filtered.reduce((acc, r) => acc + r.m202610, 0);
+      const sumTotal = filtered.reduce((acc, r) => acc + r.total, 0);
+
+      const tbody = document.getElementById("table-asc-body");
+      tbody.innerHTML = filtered.map(r => {
+        const share = sumTotal > 0 ? ((r.total / sumTotal) * 100).toFixed(1) : "0.0";
+        const badgeColor = r.country === "Chile"
+          ? "bg-blue-50 text-blue-700 border-blue-200"
+          : "bg-emerald-50 text-emerald-700 border-emerald-200";
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="py-2 px-3 font-medium text-slate-900">${r.name}</td>
+            <td class="py-2 px-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold border ${badgeColor}">${r.country}</span>
+            </td>
+            <td class="py-2 px-3 text-right ${r.m202609 > 0 ? 'text-amber-600 font-semibold' : 'text-slate-400'}">${r.m202609 || '-'}</td>
+            <td class="py-2 px-3 text-right ${r.m202610 > 0 ? 'text-blue-600 font-semibold' : 'text-slate-400'}">${r.m202610 || '-'}</td>
+            <td class="py-2 px-3 text-right font-bold text-slate-900">${r.total}</td>
+            <td class="py-2 px-3 text-right text-slate-500">${share}%</td>
+          </tr>
+        `;
+      }).join("");
+
+      const tfoot = document.getElementById("table-asc-foot");
+      tfoot.innerHTML = `
+        <tr>
+          <td class="py-2.5 px-3">Total (${filtered.length} ASCs)</td>
+          <td class="py-2.5 px-3">${selectedCountry === "ALL" ? "Chile + Bolivia" : selectedCountry}</td>
+          <td class="py-2.5 px-3 text-right text-amber-600">${sum202609}</td>
+          <td class="py-2.5 px-3 text-right text-blue-600">${sum202610}</td>
+          <td class="py-2.5 px-3 text-right text-slate-900">${sumTotal}</td>
+          <td class="py-2.5 px-3 text-right">100.0%</td>
+        </tr>
+      `;
+    }
+
+    // Initialize Dashboard on Load
+    window.addEventListener("DOMContentLoaded", () => {
+      initReceiptsCharts();
+      updateAbnormalSection();
+      updatePendingSection();
+    });
+  </script>
+</body>
+</html>

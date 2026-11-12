@@ -617,18 +617,145 @@
     Chart.defaults.color = "#475569";
     Chart.defaults.font.family = "'Inter', sans-serif";
 
+    // Custom Plugin: Render exact values directly on top/end of bars (no numeric axis scale)
+    const barValueLabelsPlugin = {
+      id: "barValueLabels",
+      afterDatasetsDraw(chart, args, pluginOptions) {
+        if (!pluginOptions || pluginOptions.display === false) return;
+        const { ctx } = chart;
+        const isHorizontal = chart.options?.indexAxis === "y";
+        const isStacked = Boolean(
+          chart.options?.scales?.x?.stacked || chart.options?.scales?.y?.stacked
+        );
+        const formatter =
+          typeof pluginOptions.formatter === "function"
+            ? pluginOptions.formatter
+            : (val) => Number(val).toLocaleString("en-US");
+
+        ctx.save();
+
+        if (!isStacked) {
+          chart.data.datasets.forEach((dataset, datasetIndex) => {
+            if (!chart.isDatasetVisible(datasetIndex)) return;
+            const meta = chart.getDatasetMeta(datasetIndex);
+            meta.data.forEach((bar, index) => {
+              const rawVal = dataset.data[index];
+              if (rawVal === null || rawVal === undefined) return;
+              if (pluginOptions.hideZero && rawVal === 0) return;
+              ctx.font = pluginOptions.font || "700 11px 'Inter', sans-serif";
+              ctx.fillStyle = pluginOptions.color || "#0f172a";
+              if (isHorizontal) {
+                ctx.textAlign = "left";
+                ctx.textBaseline = "middle";
+                ctx.fillText(formatter(rawVal), bar.x + 8, bar.y);
+              } else {
+                ctx.textAlign = "center";
+                ctx.textBaseline = "bottom";
+                ctx.fillText(formatter(rawVal), bar.x, bar.y - 6);
+              }
+            });
+          });
+        } else {
+          const labelCount = chart.data.labels.length;
+          for (let i = 0; i < labelCount; i++) {
+            let sum = 0;
+            let topY = null;
+            let rightX = null;
+            let centerPos = null;
+            const nonZeroSegments = [];
+
+            chart.data.datasets.forEach((dataset, datasetIndex) => {
+              if (!chart.isDatasetVisible(datasetIndex)) return;
+              const meta = chart.getDatasetMeta(datasetIndex);
+              const val = Number(dataset.data[i]) || 0;
+              const bar = meta.data[i];
+              if (!bar) return;
+              centerPos = isHorizontal ? bar.y : bar.x;
+              if (val > 0) {
+                sum += val;
+                if (isHorizontal) {
+                  if (rightX === null || bar.x > rightX) rightX = bar.x;
+                } else {
+                  if (topY === null || bar.y < topY) topY = bar.y;
+                }
+                nonZeroSegments.push({ val, bar });
+              } else {
+                if (isHorizontal && rightX === null) rightX = bar.x;
+                if (!isHorizontal && topY === null) topY = bar.y;
+              }
+            });
+
+            if (centerPos !== null && (sum > 0 || !pluginOptions.hideZero)) {
+              ctx.font = pluginOptions.font || "700 11px 'Inter', sans-serif";
+              ctx.fillStyle = pluginOptions.color || "#0f172a";
+              if (isHorizontal && rightX !== null) {
+                ctx.textAlign = "left";
+                ctx.textBaseline = "middle";
+                ctx.fillText(formatter(sum), rightX + 8, centerPos);
+              } else if (!isHorizontal && topY !== null) {
+                ctx.textAlign = "center";
+                ctx.textBaseline = "bottom";
+                ctx.fillText(formatter(sum), centerPos, topY - 6);
+              }
+            }
+
+            if (pluginOptions.showSegmentValues && nonZeroSegments.length > 1) {
+              ctx.font = "600 10px 'Inter', sans-serif";
+              ctx.fillStyle = "#ffffff";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              nonZeroSegments.forEach(({ val, bar }) => {
+                if (isHorizontal) {
+                  const segWidth = Math.abs(bar.x - bar.base);
+                  if (segWidth >= 22) {
+                    ctx.fillText(formatter(val), (bar.x + bar.base) / 2, bar.y);
+                  }
+                } else {
+                  const segHeight = Math.abs(bar.base - bar.y);
+                  if (segHeight >= 22) {
+                    ctx.fillText(formatter(val), bar.x, (bar.y + bar.base) / 2);
+                  }
+                }
+              });
+            }
+          }
+        }
+
+        ctx.restore();
+      }
+    };
+
+    Chart.register(barValueLabelsPlugin);
+
     // =========================================================================
-    // 2. SECTION 1 LOGIC: INGRESOS CHARTS (EXACT PALETTE FROM UPLOADED HTML)
+    // 2. SECTION 1 LOGIC: INGRESOS CHARTS (VALUES ON TOP, NO SIDE AXIS)
     // =========================================================================
 
     function initReceiptsCharts() {
       const commonBarOptions = {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        layout: { padding: { top: 22 } },
+        plugins: {
+          legend: { display: false },
+          barValueLabels: {
+            display: true,
+            color: "#0f172a"
+          }
+        },
         scales: {
-          x: { grid: { display: false }, ticks: { font: { size: 10 }, color: "#475569" } },
-          y: { beginAtZero: true, grid: { color: "#e2e8f0" }, ticks: { color: "#64748b" } }
+          x: {
+            grid: { display: false },
+            border: { color: "#cbd5e1" },
+            ticks: { font: { size: 10 }, color: "#475569" }
+          },
+          y: {
+            beginAtZero: true,
+            grace: "18%",
+            grid: { display: false },
+            border: { display: false },
+            ticks: { display: false }
+          }
         }
       };
 
@@ -797,7 +924,7 @@
         </tr>
       `;
 
-      // Render Abnormal Valuation Chart (Cyan for Status 10 & Violet/Indigo for Status 95)
+      // Render Abnormal Valuation Chart (Values on top of bars, no side axis)
       if (chartAbnormalPriceInstance) chartAbnormalPriceInstance.destroy();
       const ctxAbn = document.getElementById("chartAbnormalPrice").getContext("2d");
       chartAbnormalPriceInstance = new Chart(ctxAbn, {
@@ -831,7 +958,17 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: "top", labels: { boxWidth: 12, color: "#334155" } },
+            legend: { position: "top", labels: { boxWidth: 12, padding: 14, color: "#334155" } },
+            barValueLabels: {
+              display: true,
+              hideZero: true,
+              showSegmentValues: false,
+              color: "#0f172a",
+              formatter: (val) =>
+                selectedCurrency === "CLP"
+                  ? "$" + Math.round(val).toLocaleString("en-US")
+                  : "$" + Number(val).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            },
             tooltip: {
               callbacks: {
                 label: (ctx) => `${ctx.dataset.label}: ${
@@ -843,16 +980,19 @@
             }
           },
           scales: {
-            x: { stacked: true, grid: { display: false }, ticks: { color: "#475569" } },
+            x: {
+              stacked: true,
+              grid: { display: false },
+              border: { color: "#cbd5e1" },
+              ticks: { color: "#475569" }
+            },
             y: {
               stacked: true,
-              grid: { color: "#e2e8f0" },
-              ticks: {
-                color: "#64748b",
-                callback: (val) => selectedCurrency === "CLP"
-                  ? "$" + val.toLocaleString("en-US")
-                  : "$" + val.toFixed(0)
-              }
+              beginAtZero: true,
+              grace: "22%",
+              grid: { display: false },
+              border: { display: false },
+              ticks: { display: false }
             }
           }
         }
@@ -860,7 +1000,7 @@
     }
 
     // =========================================================================
-    // 4. SECTION 3 LOGIC: PENDING & IW GR (PALETTE FROM UPLOADED HTML)
+    // 4. SECTION 3 LOGIC: PENDING & IW GR (VALUES ON TOP, NO SIDE AXIS)
     // =========================================================================
 
     function getIwMonthlyData(country) {
@@ -944,7 +1084,7 @@
         `;
       }).join("");
 
-      // Update Monthly IW Chart (Emerald #10b981 & Rose #f43f5e from uploaded HTML)
+      // Update Monthly IW Chart (Grouped Vertical Bars with exact value above each bar)
       if (chartIwMonthlyInstance) chartIwMonthlyInstance.destroy();
       const ctxIw = document.getElementById("chartIwMonthly").getContext("2d");
       chartIwMonthlyInstance = new Chart(ctxIw, {
@@ -970,21 +1110,34 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: "top", labels: { boxWidth: 12, color: "#334155" } }
+            legend: { position: "top", labels: { boxWidth: 12, padding: 14, color: "#334155" } },
+            barValueLabels: {
+              display: true,
+              color: "#0f172a"
+            }
           },
           scales: {
-            x: { stacked: true, grid: { display: false }, ticks: { color: "#475569" } },
-            y: { stacked: true, grid: { color: "#e2e8f0" }, ticks: { color: "#64748b" } }
+            x: {
+              grid: { display: false },
+              border: { color: "#cbd5e1" },
+              ticks: { color: "#475569" }
+            },
+            y: {
+              beginAtZero: true,
+              grace: "22%",
+              grid: { display: false },
+              border: { display: false },
+              ticks: { display: false }
+            }
           }
         }
       });
 
-      // Sort ASCs descending by Total and take Top 10 for the chart
+      // Sort ASCs descending by Total and take Top 10 for horizontal bar chart with values at bar end
       const sortedAsc = [...filteredAsc].sort((a, b) => b.total - a.total);
       const top10Asc = sortedAsc.slice(0, 10);
       document.getElementById("asc-count-badge").textContent = `Top ${top10Asc.length} of ${sortedAsc.length} ASCs`;
 
-      // Amber #f59e0b & Blue #3b82f6 from uploaded HTML
       if (chartAscPendingInstance) chartAscPendingInstance.destroy();
       const ctxAsc = document.getElementById("chartAscPending").getContext("2d");
       chartAscPendingInstance = new Chart(ctxAsc, {
@@ -1010,8 +1163,15 @@
           indexAxis: "y",
           responsive: true,
           maintainAspectRatio: false,
+          layout: { padding: { right: 32 } },
           plugins: {
-            legend: { position: "top", labels: { boxWidth: 12, color: "#334155" } },
+            legend: { position: "top", labels: { boxWidth: 12, padding: 14, color: "#334155" } },
+            barValueLabels: {
+              display: true,
+              hideZero: true,
+              showSegmentValues: true,
+              color: "#0f172a"
+            },
             tooltip: {
               callbacks: {
                 title: (items) => top10Asc[items[0].dataIndex].name
@@ -1019,8 +1179,23 @@
             }
           },
           scales: {
-            x: { stacked: true, grid: { color: "#e2e8f0" }, ticks: { color: "#64748b" } },
-            y: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 }, color: "#1e293b" } }
+            x: {
+              stacked: true,
+              beginAtZero: true,
+              grace: "15%",
+              grid: { display: false },
+              border: { display: false },
+              ticks: { display: false }
+            },
+            y: {
+              stacked: true,
+              grid: { display: false },
+              border: { color: "#cbd5e1" },
+              ticks: {
+                font: { size: 11 },
+                color: "#1e293b"
+              }
+            }
           }
         }
       });
